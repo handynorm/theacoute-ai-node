@@ -30,8 +30,16 @@ export default async function handler(req, res) {
 
   const sais = spore?.CROWN?.SAIS ?? spore?.SAIS ?? "unknown";
 
-if (nextNode && spore.PELAGOS.hops_remaining > 0) {
-    fetch(nextNode, {
+  if (!Array.isArray(spore.bounce_log)) {
+    spore.bounce_log = [];
+  }
+  const hop_index = spore.bounce_log.length;
+
+  spore.bounce_log.push({
+    node: NODE_NAME,
+    ts: Date.now(),
+    iso: new Date().toISOString(),
+  });
 
   spore.PELAGOS.hops_remaining -= 1;
 
@@ -80,8 +88,7 @@ if (nextNode && spore.PELAGOS.hops_remaining > 0) {
   }
 
   if (nextNode && spore.PELAGOS.hops_remaining > 0) {
-    await new Promise(r => setTimeout(r, totalDelay));
-    await fetch(nextNode, {
+    fetch(nextNode, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(spore),
