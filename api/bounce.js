@@ -30,16 +30,8 @@ export default async function handler(req, res) {
 
   const sais = spore?.CROWN?.SAIS ?? spore?.SAIS ?? "unknown";
 
-  if (!Array.isArray(spore.bounce_log)) {
-    spore.bounce_log = [];
-  }
-  const hop_index = spore.bounce_log.length;
-
-  spore.bounce_log.push({
-    node: NODE_NAME,
-    ts: Date.now(),
-    iso: new Date().toISOString(),
-  });
+if (nextNode && spore.PELAGOS.hops_remaining > 0) {
+    fetch(nextNode, {
 
   spore.PELAGOS.hops_remaining -= 1;
 
